@@ -1,0 +1,101 @@
+components:
+  schemas:
+    rooms:
+      type: array
+      items: 
+        type: number
+    roomN:
+      type: number
+      minimum: 1
+      maximum: 50
+    person:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        age:
+          type: number
+servers:
+  - description: ''
+    url: http://localhost:3000
+openapi: 3.0.3
+paths:
+  '/rooms':
+    get:
+      description: Returns a list of occupied rooms
+      operationId: getRooms
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rooms'
+  '/rooms/{roomN}':
+    get:
+      description: Returns the list of guests in the room
+      operationId: getGuests
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/roomN'
+          in: path
+          name: roomN
+          required: true
+      responses:
+        '200':
+          description: ''
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/person'
+        '400':
+          description: The room doesn't exist
+    post:
+      description: This operation adds new people in the room
+      operationId: addGuests
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/roomN'
+          in: path
+          name: roomN
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/person'
+      responses:
+        '201':
+          description: Correctly added new people in the room
+        '400':
+          description: The room doesn't exist
+        '440':
+          description: The room is already occupied
+    delete:
+      description: This operation checks out people from the room
+      operationId: checkoutGuests
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/roomN'
+          in: path
+          name: roomN
+          required: true
+      responses:
+        '201':
+          description: Correctly checked out people in the room
+        '400':
+          description: The room doesn't exist
+        '440':
+          description: The room was already checked out
+info:
+  title: Sample Api
+  description: This is a descriptor.
+  version: 1.0.0
