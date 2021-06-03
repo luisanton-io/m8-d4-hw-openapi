@@ -55,6 +55,13 @@ paths:
                   $ref: '#/components/schemas/person'
         '400':
           description: The room doesn't exist
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
     post:
       description: This operation adds new people in the room
       operationId: addGuests
@@ -89,7 +96,7 @@ paths:
           name: roomN
           required: true
       responses:
-        '201':
+        '204':
           description: Correctly checked out people in the room
         '400':
           description: The room doesn't exist

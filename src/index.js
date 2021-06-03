@@ -44,7 +44,7 @@ app.get('/rooms', (req, res) => {
 
 app.get('/rooms/:roomN', (req, res) => {
     try {
-        const room = rooms.find(r => r.n === req.params.roomN)
+        const room = rooms.find(r => r.n === parseInt(req.params.roomN))
 
         if (!room) throw new Error("Room not found: " + req.params.room)
 
@@ -56,9 +56,13 @@ app.get('/rooms/:roomN', (req, res) => {
 
 app.post('/rooms/:roomN', (req, res) => {
     try {
+        console.log(req.params.roomN)
         const roomN = parseInt(req.params.roomN)
 
-        rooms[roomN] = req.body
+        rooms.push({
+            n: roomN,
+            guests: req.body
+        })
         res.status(201).send()
 
     } catch (error) {
@@ -68,8 +72,8 @@ app.post('/rooms/:roomN', (req, res) => {
 
 app.delete('/rooms/:roomN', (req, res) => {
     try {
-        rooms = rooms.filter(r => r.n === req.params.roomN)
-        res.status(201).send()
+        rooms = rooms.filter(r => r.n !== parseInt(req.params.roomN))
+        res.status(204).send()
     } catch (error) {
         res.status(400).send()
     }
